@@ -5,7 +5,7 @@ from application.services.FileServise.FileServise import FileService
 file_service = FileService()
 
 app.add_url_rule(
-    rule="/", methods=["GET"], view_func=file_service.start_page)
+    rule="/", methods=["GET"], view_func=file_service.upload)
 
 app.add_url_rule(
-    rule="/download", methods=["POST"], view_func=file_service.download)
+    rule="/upload-info", methods=["POST"], view_func=file_service.upload_info)
