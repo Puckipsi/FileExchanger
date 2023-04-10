@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Uploads</title>
+	<link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/uploads.css') }}">
+</head>
+<body>
+    <div class="top-container">
+    <a href="{{ url_for('upload') }}"><strong>File Exchanger</strong></a></h2>
+    </div>
+	<h1>Uploaded Files</h1>
+	<table>
+		<thead>
+			<tr>
+				<th>Filename</th>
+				<th>Size (bytes)</th>
+				<th>Upload Date</th>
+				<th>Action</th>
+				<th></th>
+			</tr>
+		</thead>
+		<tbody>
+			{% for file in files %}
+			<tr>
+				<td>{{file.file}}</td>
+				<td>{{file.size}}</td>
+                <td>{{file.upload_date}}</td>
+				</tr>
+			{% endfor %}
+		</tbody>
+	</table>
+	
+</body>
+</html>

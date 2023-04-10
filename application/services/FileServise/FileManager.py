@@ -14,3 +14,13 @@ class FileManager:
         with open(f'{folder_name}/{file_name}', 'wb') as f:
             f.write(content)
 
+    def load_uploads(self, upload_folder: str):
+        dir_path = os.path.join(app.root_path, upload_folder)
+        dir_files = os.listdir(dir_path)
+        files = [{
+		    'file': file,
+            "size": os.path.getsize(f"{dir_path}/{file}"),
+	        'upload_date': time.ctime(os.path.getctime(f"{dir_path}/{file}"))} for file in sorted(dir_files)]  
+        
+        return files
+

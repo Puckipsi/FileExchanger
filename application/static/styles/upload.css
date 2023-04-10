@@ -5,6 +5,17 @@ body {
 	background-color: #f2f2f2;
   }
   
+  .top-container{
+	top: 0;
+	left: 5px;
+	right: 5px;
+	position: absolute;
+	padding: 20px;
+	background-color: #fff;
+	border-radius: 25px;
+	box-shadow: 0 0 25px rgba(0, 0, 0, 0.3);
+  }
+
   .container {
 	width: 800px;
 	top: 50%;
@@ -56,6 +67,32 @@ body {
   
   .submit-button:hover {
 	background-color: #3e8e41;
+  }
+
+  .main-link {
+	display: inline-block;
+	margin-left: 40px;
+	font-size: 30px;
+	color: #4CAF50;
+	text-decoration: solid;
+	transition: color 0.3s ease;
+  }
+  
+  .main-link:hover {
+	color: #3e8e41;
+  }
+
+  .uploads-link {
+	display: inline-block;
+	margin-left: 70%;
+	font-size: 30px;
+	color: #4CAF50;
+	text-decoration: solid;
+	transition: color 0.3s ease;
+  }
+  
+  .uploads-link:hover {
+	color: #3e8e41;
   }
   
   /* Media Queries */

@@ -19,7 +19,7 @@ class FileService:
         return render_template("upload.html")
     
     def upload_info(self):
-        folder = config['UPLOAD_FOLDER']
+        folder = self.get_upload_folder()
         self.file_manager.assert_existing_folder(folder)
 
         file_attributes, duration =  self.get_uploading_attributes(folder)
@@ -46,7 +46,14 @@ class FileService:
 
         return full_path, data_time 
 
+
+    def uploads(self):
+        files = self.file_manager.load_uploads(self.get_upload_folder())
+        return render_template("uploads.html",files=files)
               
+    
+    def get_upload_folder(self):
+        return config['UPLOAD_FOLDER']
     
 
 

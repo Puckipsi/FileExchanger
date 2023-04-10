@@ -6,6 +6,11 @@
     <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/upload.css') }}">
   </head>
   <body>
+    <div class="top-container">
+      <a href="{{ url_for('upload') }}" class="main-link"><strong>File Exchanger</strong></a>
+      <a href="{{ url_for('uploads') }}" class="uploads-link">Uploads</a>
+    </div>
+   
     <div class="container">
       <h1>File uploading</h1>
       <form method="POST" action="{{ url_for('upload_info') }}">

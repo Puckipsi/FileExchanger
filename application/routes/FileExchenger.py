@@ -11,3 +11,6 @@ app.add_url_rule(
 
 app.add_url_rule(
     rule="/upload-info", methods=["POST"], view_func=file_service.upload_info)
+
+app.add_url_rule(
+    rule="/uploads", methods=["GET"], view_func=file_service.uploads)
