@@ -22,3 +22,9 @@ app.add_url_rule(
 
 app.add_url_rule(
     rule="/download-info/<file>", methods=["GET"], view_func=file_service.download_info)
+
+
+app.add_url_rule(
+    rule="/remove/<file>", methods=["GET"], view_func=file_service.remove)
+
+

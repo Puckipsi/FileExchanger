@@ -1,3 +1,4 @@
+import os
 from datetime import datetime
 import requests
 from __init__ import app
@@ -59,6 +60,16 @@ class FileService:
 
     def download_info(self, file: str):
         return render_template('download.html', filename=file)
+    
+    def remove(self, file):
+        file_path = self.file_manager.get_file_path(self.get_upload_folder(), file)
+
+        try:
+            os.remove(file_path)
+        except Exception as e:
+            print("An error occurred while removing file", e)
+        finally:
+            return self.uploads()
         
     
     def get_upload_folder(self):
