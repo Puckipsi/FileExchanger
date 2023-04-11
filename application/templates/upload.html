@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>File Exchanger</title>
+    <title>File Exchanger | Upload</title>
     <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/upload.css') }}">
   </head>
   <body>
@@ -15,7 +15,7 @@
       <h1>File uploading</h1>
       <form method="POST" action="{{ url_for('upload_info') }}">
         <label for="url">Paste the URL to download the file:</label>
-        <input type="text" id="url" name="url" placeholder="https://example.com" required>
+        <input type="text" id="url" name="url" placeholder="https://example.com/filename.pdf" required>
         <button type="submit" class="submit-button">
           <span>Submit</span>
         </button>

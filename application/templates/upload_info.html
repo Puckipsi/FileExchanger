@@ -1,19 +1,21 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Upload Info</title>
+    <title>File Exchanger | Upload Info</title>
     <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/upload_info.css') }}">
   </head>
   <body>
     <div class="container">
       <h1>Upload Information</h1>
       <div class="upload-info">
+        <p><strong>VPS Name:</strong> {{ vps_name }}</p>
         <p><strong>Instance ID:</strong> {{ instance_id }}</p>
         <p><strong>Instance IP:</strong> {{ instance_ip }}</p>
         <p><strong>Instance location region:</strong> {{ instance_location_region }}</p>
         <p><strong>Upload Duration:</strong> {{ upload_duration }} s</p>
         <p><strong>Upload Date:</strong> {{ upload_date }}</p>
-        <p><strong>Download Link:</strong> <a href="{{ url_for('upload') }}" class="link">{{ download_link }}</a></p>
+        <p><strong>Download Link:</strong> <a href="{{ url_for('download_info', file=filename) }}" class="link">{{ download_link }}</a></p>
+        
       </div>
       <a href="{{ url_for('upload') }}" class="back-link">Back to Upload</a>
     </div>

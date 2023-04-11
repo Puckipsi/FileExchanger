@@ -1,7 +1,7 @@
 from datetime import datetime
 import requests
 from __init__ import app
-from flask import request, render_template, send_file
+from flask import request, render_template, send_from_directory
 from dotenv import dotenv_values
 from utils.timeit import timeit
 
@@ -23,34 +23,44 @@ class FileService:
         self.file_manager.assert_existing_folder(folder)
 
         file_attributes, duration =  self.get_uploading_attributes(folder)
-        full_url, date_time = file_attributes
+        full_url, filename, date_time = file_attributes
         
         return render_template(
             "upload_info.html",
+            vps_name=f'VPS-{self.instance.InstanceLocationRegion}',
             instance_id=self.instance.InstanceId,
             instance_ip=self.instance.InstancePublicIPv4,
             instance_location_region=self.instance.InstanceLocationRegion,
             upload_duration=f'{duration:.2f}',
             upload_date=date_time,
-            download_link=full_url
+            download_link=full_url,
+            filename = filename
             )         
     
     @timeit 
     def get_uploading_attributes(self, folder: str):
         url = request.form['url']
         file_name = url.split('/')[-1]
-        r = requests.get(url)
-        self.file_manager.write_file(folder, file_name, r.content)
+        response = requests.get(url, stream=True)
+        self.file_manager.write_file(folder, file_name,  response)
         data_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         full_path = f"{request.url_root}download/{file_name}"
-
-        return full_path, data_time 
+        print('req from:',request.remote_addr)
+        return full_path, file_name, data_time 
 
 
     def uploads(self):
         files = self.file_manager.load_uploads(self.get_upload_folder())
         return render_template("uploads.html",files=files)
-              
+    
+    def download(self, file: str):
+        file_path = self.file_manager.get_file_path(self.get_upload_folder(), file)
+        return send_from_directory(config['UPLOAD_FOLDER'], file_path) 
+    
+
+    def download_info(self, file: str):
+        return render_template('download.html', filename=file)
+        
     
     def get_upload_folder(self):
         return config['UPLOAD_FOLDER']

@@ -14,3 +14,11 @@ app.add_url_rule(
 
 app.add_url_rule(
     rule="/uploads", methods=["GET"], view_func=file_service.uploads)
+
+
+app.add_url_rule(
+    rule="/download/<file>", methods=["GET"], view_func=file_service.download)
+
+
+app.add_url_rule(
+    rule="/download-info/<file>", methods=["GET"], view_func=file_service.download_info)

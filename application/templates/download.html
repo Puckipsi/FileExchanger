@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>File Exchanger | Download</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/download.css') }}">
+  
+    <script>
+        function download() {
+            var startTime = new Date().getTime();
+            var xhr = new XMLHttpRequest();
+            var filename = document.getElementById('filename').textContent;
+
+            xhr.open('GET', '/download-info/' + filename, true);
+            xhr.responseType = 'blob';
+            xhr.onload = function(e) {
+                if (this.status == 200) {
+                    var endTime = new Date().getTime();
+                    var duration = (endTime - startTime) / 1000;
+
+                    var date = new Date(endTime);
+                    var year = date.getFullYear();
+                    var month = ('0' + (date.getMonth() + 1)).slice(-2); 
+                    var day = ('0' + date.getDate()).slice(-2); 
+                    var hours = ('0' + date.getHours()).slice(-2); 
+                    var minutes = ('0' + date.getMinutes()).slice(-2); 
+                    var seconds = ('0' + date.getSeconds()).slice(-2);
+                    var formatDate = year + '-' + month + '-' + day + ' ' + hours + ':' + minutes + ':' + seconds;
+
+                    var durationParagraph = document.getElementById("duration");
+                    var durationValue = document.createElement("strong");
+                    durationValue.textContent = "Downloading Duration: ";
+                    durationParagraph.innerHTML = " ";
+                    durationParagraph.appendChild(durationValue);
+                    durationParagraph.appendChild(document.createTextNode(duration));
+
+                    var dateParagraph = document.getElementById("download_date");
+                    var dateValue = document.createElement("strong")
+                    dateValue.textContent = "Download Date: ";
+                    dateParagraph.innerHTML = " ";
+                    dateParagraph.appendChild(dateValue);
+                    dateParagraph.appendChild(document.createTextNode(formatDate));
+                    
+                    var blob = new Blob([this.response], {type: 'text/plain'});
+                    var link = document.createElement('a');
+                    link.href = window.URL.createObjectURL(blob);
+                    link.download = filename;
+                    link.click();
+                }
+            };
+            xhr.send();
+        }
+    </script>
+</head>
+<body>
+    <div class="container">
+        <h1>Download Information</h1>
+        <div class="download-info">
+          <p id="filename"><strong>File Name:</strong> {{ filename }}</p>
+          <p><strong>VPS Name:</strong> {{ vps_name }}</p>
+          <p><strong>Instance ID:</strong> {{ instance_id }}</p>
+          <p><strong>Instance IP:</strong> {{ instance_ip }}</p>
+          <p><strong>Instance location region:</strong> {{ instance_location_region }}</p>
+          <p id="duration"><strong>Downloading Duration:</strong></p>
+          <p id="download_date"><strong>Download Date:</strong></p>
+          </div>
+        <button type="submit" class="download-button" onclick="download()"><span>Start downloading</span></button>
+        <a href="{{ url_for('upload') }}" class="back-link">Back to Upload</a>
+      </div>
+</body>
+</html>
