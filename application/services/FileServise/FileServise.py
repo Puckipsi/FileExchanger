@@ -54,8 +54,7 @@ class FileService:
         return render_template("uploads.html",files=files)
     
     def download(self, file: str):
-        file_path = self.file_manager.get_file_path(self.get_upload_folder(), file)
-        return send_from_directory(config['UPLOAD_FOLDER'], file_path) 
+        return send_from_directory(config['UPLOAD_FOLDER'], file, as_attachment=True) 
     
 
     def download_info(self, file: str):
