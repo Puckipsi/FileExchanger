@@ -6,8 +6,9 @@
 </head>
 <body>
     <div class="top-container">
-    <a href="{{ url_for('upload') }}"><strong>File Exchanger</strong></a></h2>
+		<a href="{{ url_for('upload') }}" class="main-link"><strong>File Exchanger</strong></a>
     </div>
+
 	<h1>Uploaded Files</h1>
 	<table>
 		<thead>
@@ -25,6 +26,7 @@
 				<td>{{file.file}}</td>
 				<td>{{file.size}}</td>
                 <td>{{file.upload_date}}</td>
+				<td><button><a href="{{ url_for('download_info', file=file.file) }}">Download</a></button> </td>
 				</tr>
 			{% endfor %}
 		</tbody>
