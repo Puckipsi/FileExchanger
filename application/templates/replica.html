@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>File Exchanger | Replica Info</title>
+    <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/replica.css') }}">
+  </head>
+  <body>
+    <div class="container">
+      <h1>Replica Information</h1>
+      <div class="replica">
+        <ul>
+            {% for replica in replicas %}
+            <li>
+              <p><strong>VPS Name:</strong> VPS-{{ replica["instance_data"]["instance_location_region"] }}</p>
+              <p><strong>VPS Location:</strong>{{ replica["instance_data"]["instance_location_region"] }}</p>
+              <p><strong>VPS IP Address:</strong>{{ replica["instance_data"]["instance_public_ipv4"] }}</p>
+              <p><strong>Upload Date:</strong> {{ replica["data_time"] }}</p>
+              <p><strong>Upload Duration (s):</strong> {{ replica["duration"] }}</p>
+              <p><strong>Download url: </strong>http://{{ replica["instance_data"]["instance_public_ipv4"]}}/download/{{filename}}</p>
+              <p><strong>-</strong></p>
+            </li>
+            {% endfor %}
+          </ul>
+        </div>
+      <a href="{{ url_for('uploads') }}" class="back-link">Back to Uploads</a>
+    </div>
+  </body>
+</html>
