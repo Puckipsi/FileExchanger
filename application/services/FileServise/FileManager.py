@@ -10,6 +10,11 @@ class FileManager:
         if not os.path.exists(folder_name):
             os.makedirs(folder_name)
 
+    def assert_file_existing(self, folder_name: str, file: str):
+        if os.path.isfile(f'{folder_name}/{file}.json'):
+            return True
+        
+
 
     def write_file(self, folder_name: str, file_name: str, response: object):
         with open(f'{folder_name}/{file_name}', 'wb') as f:

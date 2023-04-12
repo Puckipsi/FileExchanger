@@ -9,6 +9,9 @@ class Config:
     def get_upload_folder(self):
         return config['UPLOAD_FOLDER']
     
+    def get_replica_folder(self):
+        return config['REPLICA_FOLDER']
+    
 
     def get_upload_file_endpoint(self):
         return config['UPLOAD_FILE_ENDPOINT']

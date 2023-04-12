@@ -17,18 +17,18 @@ class WriteReplica:
                 return await response.text()
                 
 
-    async def upload_file_to_servers(self, response, server_urls, upload_endpoint, filename):
+    async def upload_file_to_servers(self, replica_folder, response, server_urls, upload_endpoint, filename):
         tasks = []
         for url in server_urls:
             upload = self.upload_file(url, response, upload_endpoint, filename)
             task = asyncio.create_task(upload)
             tasks.append(task)
-            
+
         response = await asyncio.gather(*tasks)
         replicated = [json.loads(res) for res in response]
-        write_json_to_file(filename, {filename:replicated })
+        write_json_to_file(replica_folder, filename, {filename:replicated })
 
 
-    def replicate(self, response, hosts, upload_endpoint, filename):
-        asyncio.run(self.upload_file_to_servers(response, hosts, upload_endpoint, filename))
+    def replicate(self, replica_folder, response, hosts, upload_endpoint, filename):
+        asyncio.run(self.upload_file_to_servers(replica_folder, response, hosts, upload_endpoint, filename))
         

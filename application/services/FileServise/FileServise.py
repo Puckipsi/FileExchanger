@@ -4,8 +4,7 @@ import requests
 from __init__ import app
 from flask import request, render_template, send_from_directory, jsonify
 from utils.timeit import timeit
-import json
-
+from utils.json import read_json_file
 
 class FileService:
 
@@ -21,7 +20,7 @@ class FileService:
     def upload_file(self):
         data_time, duration = self.handle_upload()
         instance_data = self.instance.get_instance_data()
-        return jsonify({'duration':duration, "data_time": data_time,"instance_data": instance_data})
+        return jsonify({'duration':f'{duration:.4f}', "data_time": data_time,"instance_data": instance_data})
         
     @timeit
     def handle_upload(self):
@@ -34,7 +33,10 @@ class FileService:
     
     
     def upload_info(self):
-        self.file_manager.assert_existing_folder(self.config.get_upload_folder())
+        upload_folder, replica_folder = self.config.get_upload_folder(), self.config.get_replica_folder()
+        self.file_manager.assert_existing_folder(upload_folder)
+        self.file_manager.assert_existing_folder(replica_folder)
+
         host = 'http://192.168.1.2/'
         urls = self.config.get_available_hosts()
 
@@ -42,7 +44,7 @@ class FileService:
         file_attributes, duration =  self.get_uploading_attributes(host, upload_endpoint)
         full_url, filename, date_time, response = file_attributes
  
-        self.write_replica.replicate(response, urls, upload_endpoint, filename)
+        self.write_replica.replicate(replica_folder, response, urls, upload_endpoint, filename)
         instance_data = self.instance.get_instance_data()
         
         return render_template(
@@ -89,5 +91,17 @@ class FileService:
             print("An error occurred while removing file", e)
         finally:
             return self.uploads()
+           
+    def replica_info(self, file):
+        replica_folder = self.config.get_replica_folder()
         
+        if not self.file_manager.assert_file_existing(replica_folder, file):
+            return render_template('replica404.html', filename=file)
+        
+        replicas = read_json_file(replica_folder, file)
+        replicas = replicas.get(file)
+
+        return render_template('replica.html',replicas=replicas, filename=file)
+        
+            
 
