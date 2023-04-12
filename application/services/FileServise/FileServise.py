@@ -2,9 +2,9 @@ import os
 from datetime import datetime
 import requests
 from __init__ import app
-from flask import request, render_template, send_from_directory
+from flask import request, render_template, send_from_directory, jsonify
 from utils.timeit import timeit
-
+import json
 
 
 class FileService:
@@ -19,16 +19,18 @@ class FileService:
         return render_template("upload.html")
     
     def upload_file(self):
+        data_time, duration = self.handle_upload()
+        instance_data = self.instance.get_instance_data()
+        return jsonify({'duration':duration, "data_time": data_time,"instance_data": instance_data})
+        
+    @timeit
+    def handle_upload(self):
         folder = self.config.get_upload_folder()
         file = request.files['file']
         filename = file.filename
         file.save("/".join((folder, filename)))
-
-        #file = request.files["file"]
-        #filename = file.filename
-        #folder = self.config.get_upload_folder()
-        #file.save("/".join((folder, filename)))
-        return 'File uploaded successfully'
+        data_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        return data_time
     
     
     def upload_info(self):
@@ -40,14 +42,15 @@ class FileService:
         file_attributes, duration =  self.get_uploading_attributes(host, upload_endpoint)
         full_url, filename, date_time, response = file_attributes
  
-        self.write_replica.replicate(response, urls, filename)
+        self.write_replica.replicate(response, urls, upload_endpoint, filename)
+        instance_data = self.instance.get_instance_data()
         
         return render_template(
             "upload_info.html",
-            vps_name=f'VPS-{self.instance.InstanceLocationRegion}',
-            instance_id=self.instance.InstanceId,
-            instance_ip=self.instance.InstancePublicIPv4,
-            instance_location_region=self.instance.InstanceLocationRegion,
+            vps_name='VPS-'+instance_data.get('instance_location_region'),
+            instance_id=instance_data.get('instance_id'),
+            instance_ip=instance_data.get('instance_public_ipv4'),
+            instance_location_region=instance_data.get('instance_location_region'),
             upload_duration=f'{duration:.4f}',
             upload_date=date_time,
             download_link=full_url,
