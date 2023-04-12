@@ -1,6 +1,7 @@
 import os
 import time
 from __init__ import app
+import requests
 
 
 class FileManager:
@@ -14,6 +15,12 @@ class FileManager:
         with open(f'{folder_name}/{file_name}', 'wb') as f:
             for chunk in response.iter_content(chunk_size=8192):
                 f.write(chunk)
+
+    def upload_file(self, host: str, endpoint:str, file_name: str, response: bytes):
+        files = {'file': (file_name, response.content)}
+        target_url = host + endpoint
+        response = requests.post(target_url, files=files)
+        
 
     def load_uploads(self, upload_folder: str):
         dir_path = os.path.join(app.root_path, upload_folder)
