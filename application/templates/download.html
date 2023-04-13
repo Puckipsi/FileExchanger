@@ -9,9 +9,9 @@
         function download() {
             var startTime = new Date().getTime();
             var xhr = new XMLHttpRequest();
-            var filename = document.getElementById('filename').textContent;
+            var filename = document.getElementById('filename').textContent.trim().replace('File Name: ', '');
 
-            xhr.open('GET', '/download-info/' + filename, true);
+            xhr.open('GET', '/download/' + filename, true);
             xhr.responseType = 'blob';
             xhr.onload = function(e) {
                 if (this.status == 200) {
@@ -56,7 +56,7 @@
     <div class="container">
         <h1>Download Information</h1>
         <div class="download-info">
-          <p id="filename"><strong>File Name:</strong> {{ filename }}</p>
+          <p id="filename"><strong>File Name: </strong>{{ filename }}</p>
           <p><strong>VPS Name:</strong> VPS-{{instance_data["instance_location_region"] }}</p>
           <p><strong>Instance ID:</strong> {{ instance_data["instance_id"] }}</p>
           <p><strong>Instance IP:</strong> {{ instance_data["instance_public_ipv4"] }}</p>
