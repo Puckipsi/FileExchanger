@@ -1,10 +1,10 @@
 import os
 from datetime import datetime
 import requests
-from __init__ import app
 from flask import request, render_template, send_from_directory, jsonify
 from utils.timeit import timeit
 from utils.json import read_json_file
+
 
 class FileService:
 
@@ -37,7 +37,7 @@ class FileService:
         self.file_manager.assert_existing_folder(upload_folder)
         self.file_manager.assert_existing_folder(replica_folder)
 
-        host = 'http://192.168.1.2/'
+        host = 'http://18.157.163.62/'
         urls = self.config.get_available_hosts()
 
         upload_endpoint = self.config.get_upload_file_endpoint()
@@ -63,7 +63,9 @@ class FileService:
     def get_uploading_attributes(self, host: str, endpoint: str,):
         url = request.form['url']
         file_name = url.split('/')[-1]
+        print("geting req")
         response = requests.get(url, stream=True)
+        print("post req")
         self.file_manager.upload_file(host, endpoint, file_name, response)
         data_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         full_path = f"{host}download/{file_name}"
@@ -94,7 +96,7 @@ class FileService:
            
     def replica_info(self, file):
         replica_folder = self.config.get_replica_folder()
-        
+
         if not self.file_manager.assert_file_existing(replica_folder, file):
             return render_template('replica404.html', filename=file)
         
