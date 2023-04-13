@@ -8,13 +8,13 @@
     <div class="container">
       <h1>Upload Information</h1>
       <div class="upload-info">
-        <p><strong>VPS Name:</strong> {{ vps_name }}</p>
-        <p><strong>Instance ID:</strong> {{ instance_id }}</p>
-        <p><strong>Instance IP:</strong> {{ instance_ip }}</p>
-        <p><strong>Instance location region:</strong> {{ instance_location_region }}</p>
-        <p><strong>Upload Duration:</strong> {{ upload_duration }} s</p>
-        <p><strong>Upload Date:</strong> {{ upload_date }}</p>
-        <p><strong>Download Link:</strong> <a href="{{ url_for('download_info', file=filename) }}" class="link">{{ download_link }}</a></p>
+        <p><strong>VPS Name:</strong> VPS-{{ response['instance_data']['instance_location_region']}}</p>
+        <p><strong>Instance ID:</strong> {{ response['instance_data']['instance_id'] }}</p>
+        <p><strong>Instance IP:</strong> {{ response['instance_data']['instance_public_ipv4'] }}</p>
+        <p><strong>Instance location region:</strong> {{ response['instance_data']['instance_location_region'] }}</p>
+        <p><strong>Upload Duration (sec):</strong> {{ response['duration'] }}</p>
+        <p><strong>Upload Date:</strong> {{ response['data_time'] }}</p>
+        <p><strong>Download Link:</strong> <a href="{{ url_for('download_info', file=response['filename']) }}" class="link">{{ response['download_link'] }}</a></p>
         
       </div>
       <a href="{{ url_for('upload') }}" class="back-link">Back to Upload</a>

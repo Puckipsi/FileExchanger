@@ -2,6 +2,7 @@ import os
 import time
 from __init__ import app
 import requests
+from utils.timeit import timeit
 
 
 class FileManager:
@@ -15,7 +16,7 @@ class FileManager:
             return True
         
 
-
+    @timeit
     def write_file(self, folder_name: str, file_name: str, response: object):
         with open(f'{folder_name}/{file_name}', 'wb') as f:
             for chunk in response.iter_content(chunk_size=8192):
@@ -24,7 +25,8 @@ class FileManager:
     def upload_file(self, host: str, endpoint:str, file_name: str, response: bytes):
         files = {'file': (file_name, response.content)}
         target_url = host + endpoint
-        response = requests.post(target_url, files=files)
+        res = requests.post(target_url, files=files)
+        return res.text
         
 
     def load_uploads(self, upload_folder: str):

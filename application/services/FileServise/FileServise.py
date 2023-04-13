@@ -44,48 +44,39 @@ class FileService:
     
     def upload_info(self):
         host = 'http://192.168.1.2/'
-        
-        file_attributes, duration =  self.get_uploading_attributes(host)
-        full_url, filename, date_time, response = file_attributes
-        
-        is_origin_host = host == request.host_url
-        self.write_replica.replicate(is_origin_host, host, response, filename)
-        
-        instance_data = self.instance.get_instance_data()
-        
-        return render_template(
-            "upload_info.html",
-            vps_name='VPS-'+instance_data.get('instance_location_region'),
-            instance_id=instance_data.get('instance_id'),
-            instance_ip=instance_data.get('instance_public_ipv4'),
-            instance_location_region=instance_data.get('instance_location_region'),
-            upload_duration=f'{duration:.4f}',
-            upload_date=date_time,
-            download_link=full_url,
-            filename = filename
-            ) 
     
-    @timeit 
+        response, upload_response = self.get_uploading_attributes(host)
+
+        is_origin_host = host == request.host_url
+        self.write_replica.replicate(is_origin_host, host, response, upload_response['filename'])
+
+        return render_template("upload_info.html", response=upload_response) 
+    
+
     def get_uploading_attributes(self, host: str):
         url = request.form['url']
-        file_name = url.split('/')[-1]
+        filename = url.split('/')[-1]
         response = requests.get(url, stream=True)
 
         upload_endpoint = self.config.get_upload_file_endpoint()
-        self.file_manager.upload_file(host, upload_endpoint, file_name, response)
+        self.file_manager.upload_file(host, upload_endpoint, filename, response)
 
-        
+        download_link = f"{request.host_url}download/{filename}"
+
         if host == request.host_url:
             upload_folder = self.config.get_upload_folder()
-            self.file_manager.write_file(upload_folder, file_name, response)
+            duration = self.file_manager.write_file(upload_folder, filename, response)
+            data_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            _, duration = duration
+            upload_response = {"data_time":data_time, "duration": duration, "instance_data": self.instance.get_instance_data()}
         else:
             upload_endpoint = self.config.get_upload_file_endpoint()
-            self.file_manager.upload_file(host, upload_endpoint, file_name, response)
+            upload_response = self.file_manager.upload_file(host, upload_endpoint, filename, response)
         
-        data_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        full_path = f"{request.host_url}download/{file_name}"
-        
-        return full_path, file_name, data_time, response
+        upload_response['filename'] = filename
+        upload_response['download_link'] = download_link
+
+        return response, upload_response
 
 
     def uploads(self):
