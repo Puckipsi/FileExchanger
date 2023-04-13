@@ -13,6 +13,16 @@ class FileService:
         self.instance = Instence()
         self.write_replica = WriteReplica()
         self.config = Config()
+        self.assert_project_folder()
+
+
+    def assert_project_folder(self):
+        upload_folder = self.config.get_upload_folder()
+        replica_folder = self.config.get_replica_folder()
+
+        self.file_manager.assert_existing_folder(upload_folder)
+        self.file_manager.assert_existing_folder(replica_folder)
+
 
     def upload(self):
         return render_template("upload.html")
@@ -33,19 +43,14 @@ class FileService:
     
     
     def upload_info(self):
-        upload_folder, replica_folder = self.config.get_upload_folder(), self.config.get_replica_folder()
-        self.file_manager.assert_existing_folder(upload_folder)
-        self.file_manager.assert_existing_folder(replica_folder)
-
         host = 'http://192.168.1.2/'
-        urls = self.config.get_available_hosts()
-        if host in urls: urls.remove(host)
-
-        upload_endpoint = self.config.get_upload_file_endpoint()
-        file_attributes, duration =  self.get_uploading_attributes(upload_folder, host, upload_endpoint)
+        
+        file_attributes, duration =  self.get_uploading_attributes(host)
         full_url, filename, date_time, response = file_attributes
- 
-        self.write_replica.replicate(replica_folder, response, urls, upload_endpoint, filename)
+        
+        is_origin_host = host == request.host_url
+        self.write_replica.replicate(is_origin_host, host, response, filename)
+        
         instance_data = self.instance.get_instance_data()
         
         return render_template(
@@ -61,16 +66,22 @@ class FileService:
             ) 
     
     @timeit 
-    def get_uploading_attributes(self, upload_folder: str, host: str, endpoint: str,):
+    def get_uploading_attributes(self, host: str):
         url = request.form['url']
         file_name = url.split('/')[-1]
         response = requests.get(url, stream=True)
+
+        upload_endpoint = self.config.get_upload_file_endpoint()
+        self.file_manager.upload_file(host, upload_endpoint, file_name, response)
+
         
         if host == request.host_url:
+            upload_folder = self.config.get_upload_folder()
             self.file_manager.write_file(upload_folder, file_name, response)
         else:
-            self.file_manager.upload_file(host, endpoint, file_name, response)
-
+            upload_endpoint = self.config.get_upload_file_endpoint()
+            self.file_manager.upload_file(host, upload_endpoint, file_name, response)
+        
         data_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         full_path = f"{request.host_url}download/{file_name}"
         
