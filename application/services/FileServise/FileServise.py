@@ -85,7 +85,8 @@ class FileService:
     
 
     def download_info(self, file: str):
-        return render_template('download.html', filename=file)
+        instance_data = self.instance.get_instance_data()
+        return render_template('download.html', instance_data=instance_data, filename=file)
     
     def remove(self, file):
         file_path = self.file_manager.get_file_path(self.config.get_upload_folder(), file)

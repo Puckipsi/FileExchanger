@@ -57,10 +57,10 @@
         <h1>Download Information</h1>
         <div class="download-info">
           <p id="filename"><strong>File Name:</strong> {{ filename }}</p>
-          <p><strong>VPS Name:</strong> {{ vps_name }}</p>
-          <p><strong>Instance ID:</strong> {{ instance_id }}</p>
-          <p><strong>Instance IP:</strong> {{ instance_ip }}</p>
-          <p><strong>Instance location region:</strong> {{ instance_location_region }}</p>
+          <p><strong>VPS Name:</strong> VPS-{{instance_data["instance_location_region"] }}</p>
+          <p><strong>Instance ID:</strong> {{ instance_data["instance_id"] }}</p>
+          <p><strong>Instance IP:</strong> {{ instance_data["instance_public_ipv4"] }}</p>
+          <p><strong>Instance location region:</strong> {{ instance_data["instance_location_region"] }}</p>
           <p id="duration"><strong>Downloading Duration:</strong></p>
           <p id="download_date"><strong>Download Date:</strong></p>
           </div>
