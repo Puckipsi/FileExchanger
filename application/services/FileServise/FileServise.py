@@ -37,11 +37,12 @@ class FileService:
         self.file_manager.assert_existing_folder(upload_folder)
         self.file_manager.assert_existing_folder(replica_folder)
 
-        host = 'http://18.157.163.62/'
+        host = 'http://192.168.1.2/'
         urls = self.config.get_available_hosts()
+        if host in urls: urls.remove(host)
 
         upload_endpoint = self.config.get_upload_file_endpoint()
-        file_attributes, duration =  self.get_uploading_attributes(host, upload_endpoint)
+        file_attributes, duration =  self.get_uploading_attributes(upload_folder, host, upload_endpoint)
         full_url, filename, date_time, response = file_attributes
  
         self.write_replica.replicate(replica_folder, response, urls, upload_endpoint, filename)
@@ -60,15 +61,17 @@ class FileService:
             ) 
     
     @timeit 
-    def get_uploading_attributes(self, host: str, endpoint: str,):
+    def get_uploading_attributes(self, upload_folder: str, host: str, endpoint: str,):
         url = request.form['url']
         file_name = url.split('/')[-1]
-        print("geting req")
         response = requests.get(url, stream=True)
-        print("post req")
-        self.file_manager.upload_file(host, endpoint, file_name, response)
-        data_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        
+        if host == request.host_url:
+            self.file_manager.write_file(upload_folder, file_name, response)
+        else:
+            self.file_manager.upload_file(host, endpoint, file_name, response)
 
+        data_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         full_path = f"{request.host_url}download/{file_name}"
         
         return full_path, file_name, data_time, response
