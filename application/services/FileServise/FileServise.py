@@ -74,7 +74,9 @@ class FileService:
 
 
     def uploads(self):
-        files = self.file_manager.load_uploads(self.config.get_upload_folder())
+        upload_folder = self.config.get_upload_folder()
+        self.file_manager.assert_existing_folder(upload_folder)
+        files = self.file_manager.load_uploads(upload_folder)
         return render_template("uploads.html",files=files)
     
     def download(self, file: str):
