@@ -9,6 +9,7 @@
       <h1>Replica Information</h1>
       <div class="replica">
         <ul>
+          <h1>File: {{filename}} replicated to:</h1>
             {% for replica in replicas %}
             <li>
               <p><strong>VPS Name:</strong> VPS-{{ replica["instance_data"]["instance_location_region"] }}</p>
