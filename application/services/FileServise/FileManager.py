@@ -1,5 +1,6 @@
 import os
 import time
+import json
 from __init__ import app
 import requests
 from utils.timeit import timeit
@@ -26,7 +27,7 @@ class FileManager:
         files = {'file': (file_name, response.content)}
         target_url = host + endpoint
         res = requests.post(target_url, files=files)
-        return res.text
+        return json.loads(res.text)
         
 
     def load_uploads(self, upload_folder: str):

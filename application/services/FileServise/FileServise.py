@@ -49,7 +49,7 @@ class FileService:
 
         is_origin_host = host == request.host_url
         self.write_replica.replicate(is_origin_host, host, response, upload_response['filename'])
-
+        
         return render_template("upload_info.html", response=upload_response) 
     
 
@@ -57,9 +57,6 @@ class FileService:
         url = request.form['url']
         filename = url.split('/')[-1]
         response = requests.get(url, stream=True)
-
-        upload_endpoint = self.config.get_upload_file_endpoint()
-        self.file_manager.upload_file(host, upload_endpoint, filename, response)
 
         download_link = f"{request.host_url}download/{filename}"
 
@@ -72,7 +69,7 @@ class FileService:
         else:
             upload_endpoint = self.config.get_upload_file_endpoint()
             upload_response = self.file_manager.upload_file(host, upload_endpoint, filename, response)
-        
+
         upload_response['filename'] = filename
         upload_response['download_link'] = download_link
 
