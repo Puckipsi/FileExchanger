@@ -4,7 +4,7 @@ import requests
 from flask import request, render_template, send_from_directory, jsonify
 from utils.timeit import timeit
 from utils.json import read_json_file
-
+from __init__ import app
 
 class FileService:
 
@@ -68,7 +68,8 @@ class FileService:
         print("post req")
         self.file_manager.upload_file(host, endpoint, file_name, response)
         data_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        full_path = f"{host}download/{file_name}"
+
+        full_path = f"{request.host_url}download/{file_name}"
         
         return full_path, file_name, data_time, response
 
