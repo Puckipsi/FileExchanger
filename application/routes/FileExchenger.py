@@ -3,9 +3,10 @@ from application.services.FileServise.FileServise import FileService
 from application.services.FileServise.FileManager import FileManager
 from application.services.FileServise.Instence import EC2Instance
 from utils.config import Config
+from utils.geo_locator import GeoLocator
 
 
-file_service = FileService(FileManager, EC2Instance, Config)
+file_service = FileService(FileManager, EC2Instance, Config, GeoLocator)
 
 app.add_url_rule(
     rule="/", methods=["GET"], view_func=file_service.upload)

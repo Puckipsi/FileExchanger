@@ -9,10 +9,11 @@ from application.services.CrosReplica.Replica import send_files_to_servers
 
 class FileService:
 
-    def __init__(self, FileManager: object, Instence: object, Config: object) -> None:
+    def __init__(self, FileManager: object, Instence: object, Config: object, GeoLocator: object) -> None:
         self.file_manager = FileManager()
         self.instance = Instence()
         self.config = Config()
+        self.geo_locator = GeoLocator()
         self.assert_project_folder()
 
 
@@ -43,23 +44,23 @@ class FileService:
     
     
     def upload_info(self):
-        host = 'http://192.168.1.2/'
-    
-        upload_response = self.get_uploading_attributes(host)
-        is_origin_host = host == request.host_url
+        url = request.form.get('url')
+        nearest_host = self.geo_locator.find_nearest_host(url)
+        
+        upload_response = self.get_uploading_attributes(url, nearest_host)
+        is_origin_host = nearest_host == request.host_url
 
-        task = send_files_to_servers.delay(is_origin_host, host, upload_response['filename'])
+        task = send_files_to_servers.delay(is_origin_host, nearest_host, upload_response['filename'])
         print("task id:", task.id)
 
         return render_template("upload_info.html", response=upload_response) 
     
 
-    def get_uploading_attributes(self, host: str):
-        url = request.form['url']
+    def get_uploading_attributes(self, url: str, host: str):
         filename = url.split('/')[-1]
         response = requests.get(url, stream=True)
 
-        download_link = f"{request.host_url}download/{filename}"
+        download_link = f"{host}download/{filename}"
 
         if host == request.host_url:
             upload_folder = self.config.get_upload_folder()
