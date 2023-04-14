@@ -8,7 +8,7 @@
     <div class="container">
       <h1>Upload Information</h1>
       <div class="upload-info">
-        <p><strong>VPS Name:</strong> VPS-{{ response['instance_data']['instance_location_region']}}</p>
+        <p><strong>VPS Name:</strong> VPS {{response['instance_data']['aws_region']}}-{{response['instance_data']['instance_location_region']}}</p>
         <p><strong>Instance ID:</strong> {{ response['instance_data']['instance_id'] }}</p>
         <p><strong>Instance IP:</strong> {{ response['instance_data']['instance_public_ipv4'] }}</p>
         <p><strong>Instance location region:</strong> {{ response['instance_data']['instance_location_region'] }}</p>

@@ -1,9 +1,19 @@
+from enum import Enum
 from ec2_metadata import ec2_metadata
 from dotenv import dotenv_values
 
 
 config = dotenv_values('.env')
 env_infrastruct = config['ENVIRONMENT_INFRASTRUCT']
+
+
+class AWSRegion(Enum):
+    eu = 'Europe'
+    us = 'US'
+    ap = 'Asia Pacific'
+    ca = 'Canada'
+    sa = 'South America'
+
 
 
 class EC2Instance:
@@ -14,8 +24,15 @@ class EC2Instance:
 
     def get_instance_data(self)->dict:
         data = {
+            "aws_region": self.instance_location_region(self.InstanceLocationRegion),
             "instance_id": self.InstanceId,
             "instance_location_region": self.InstanceLocationRegion,
             "instance_public_ipv4": self.InstancePublicIPv4,
         }
         return data
+    
+
+    def instance_location_region(self, region: str) -> str:
+        region_code = region.split('-')[0]
+        if not region_code: region_code ='eu'
+        return AWSRegion[region_code].value
