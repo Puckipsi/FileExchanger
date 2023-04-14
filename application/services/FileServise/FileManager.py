@@ -28,6 +28,14 @@ class FileManager:
         target_url = host + endpoint
         res = requests.post(target_url, files=files)
         return json.loads(res.text)
+    
+
+    def upload_file_from_local(self, host: str, upload_endpoint:str, upload_folder: str, filename: str):
+        with open(f'{upload_folder}/{filename}', 'rb') as file:
+            files = {'file': (filename, file)}
+            response = requests.post(host + upload_endpoint, files=files)
+
+        return response
         
 
     def load_uploads(self, upload_folder: str):
