@@ -4,14 +4,13 @@ import requests
 from flask import request, render_template, send_from_directory, jsonify
 from utils.timeit import timeit
 from utils.json import read_json_file
-from __init__ import app
+
 
 class FileService:
 
-    def __init__(self, FileManager: object, Instence: object, WriteReplica: object, Config: object) -> None:
+    def __init__(self, FileManager: object, Instence: object, Config: object) -> None:
         self.file_manager = FileManager()
         self.instance = Instence()
-        self.write_replica = WriteReplica()
         self.config = Config()
         self.assert_project_folder()
 
@@ -45,11 +44,9 @@ class FileService:
     def upload_info(self):
         host = 'http://192.168.1.2/'
     
-        response, upload_response = self.get_uploading_attributes(host)
-
+        upload_response = self.get_uploading_attributes(host)
         is_origin_host = host == request.host_url
-        self.write_replica.replicate(is_origin_host, host, response, upload_response['filename'])
-        
+
         return render_template("upload_info.html", response=upload_response) 
     
 
@@ -70,10 +67,11 @@ class FileService:
             upload_endpoint = self.config.get_upload_file_endpoint()
             upload_response = self.file_manager.upload_file(host, upload_endpoint, filename, response)
 
+        upload_response['duration'] = round(upload_response['duration'], 4)
         upload_response['filename'] = filename
         upload_response['download_link'] = download_link
 
-        return response, upload_response
+        return upload_response
 
 
     def uploads(self):

@@ -2,11 +2,10 @@ from __init__ import app
 from application.services.FileServise.FileServise import FileService
 from application.services.FileServise.FileManager import FileManager
 from application.services.FileServise.Instence import EC2Instance
-from application.services.CrosReplica.WriteReplica import WriteReplica
 from utils.config import Config
 
 
-file_service = FileService(FileManager, EC2Instance, WriteReplica, Config)
+file_service = FileService(FileManager, EC2Instance, Config)
 
 app.add_url_rule(
     rule="/", methods=["GET"], view_func=file_service.upload)
