@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>File Exchanger | Download File Error</title>
+    <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/download.css') }}">
+  </head>
+  <body>
+    <div class="container">
+      <h1>Download File Error</h1>
+      <div class="download-info">
+        <h1>File '{{file}}' not found here.</h1>
+        <h1>This file has been deleted or replication is in progress</h1>
+        </div>
+      <a href="{{ url_for('uploads') }}" class="back-link">Back to Uploads</a>
+    </div>
+  </body>
+</html>

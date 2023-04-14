@@ -97,6 +97,11 @@ class FileService:
 
 
     def download_info(self, file: str):
+        uploads_folder = self.config.get_upload_folder()
+
+        if not self.file_manager.assert_file_existing(uploads_folder, file):
+            return render_template('download404.html', file=file)
+        
         instance_data = self.instance.get_instance_data()
         return render_template('download.html', instance_data=instance_data, filename=file)
     
