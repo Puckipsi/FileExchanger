@@ -1,7 +1,7 @@
 import os
 from datetime import datetime
 import requests
-from flask import request, render_template, send_from_directory, jsonify
+from flask import request, render_template, send_from_directory, jsonify, redirect
 from utils.timeit import timeit
 from utils.json import read_json_file
 from application.services.CrosReplica.Replica import send_files_to_servers
@@ -88,6 +88,13 @@ class FileService:
     def download(self, file: str):
         return send_from_directory(self.config.get_upload_folder(), file, as_attachment=True) 
     
+
+    def download_redirection(self, file):
+        client_ip_address = request.remote_addr
+        print('client_ip_address', client_ip_address)
+        nearest_host = self.geo_locator.find_nearest_host(client_ip_address)
+        return redirect(f'{nearest_host}download-info/{file}')
+
 
     def download_info(self, file: str):
         instance_data = self.instance.get_instance_data()

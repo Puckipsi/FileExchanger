@@ -1,5 +1,14 @@
 import socket
+from ipaddress import ip_address
 
+
+
+def is_valid_ip_address(ip: str) -> bool:
+    try:
+        ip_address(ip)
+        return True
+    except ValueError:
+        return False
 
 
 def get_domain_from_url(url: str) -> str:

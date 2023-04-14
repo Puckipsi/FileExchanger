@@ -1,5 +1,5 @@
 import geocoder
-from utils.url import get_domain_from_url, get_ip_from_domain
+from utils.url import get_domain_from_url, get_ip_from_domain, is_valid_ip_address
 from utils.config import Config
 
 
@@ -37,7 +37,7 @@ class GeoLocator:
 
     def distance_between_hosts(self, target_url: str = '', hosts: list = []) -> dict:
         distances = {}
-        target_host_ip = self.get_domain_ip_adddress_from_url(target_url)
+        target_host_ip = target_url if is_valid_ip_address(target_url) else self.get_domain_ip_adddress_from_url(target_url)
         target_host_location = self.get_location_by_ip(target_host_ip).latlng
     
         for host in hosts:
