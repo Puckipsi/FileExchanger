@@ -4,6 +4,7 @@ import requests
 from flask import request, render_template, send_from_directory, jsonify
 from utils.timeit import timeit
 from utils.json import read_json_file
+from application.services.CrosReplica.Replica import send_files_to_servers
 
 
 class FileService:
@@ -47,6 +48,9 @@ class FileService:
         upload_response = self.get_uploading_attributes(host)
         is_origin_host = host == request.host_url
 
+        task = send_files_to_servers.delay(is_origin_host, host, upload_response['filename'])
+        print("task id:", task.id)
+
         return render_template("upload_info.html", response=upload_response) 
     
 
@@ -67,7 +71,7 @@ class FileService:
             upload_endpoint = self.config.get_upload_file_endpoint()
             upload_response = self.file_manager.upload_file(host, upload_endpoint, filename, response)
 
-        upload_response['duration'] = round(upload_response['duration'], 4)
+        upload_response['duration'] = str(upload_response['duration'])[:6]
         upload_response['filename'] = filename
         upload_response['download_link'] = download_link
 
