@@ -14,10 +14,13 @@ yes | sudo apt-get install python3-venv
 
 yes | sudo apt install python3-pip
 
+echo 'run celery'
+sudo nohup celery -A __init__.celery worker -l info >> celery.log 2>&1 &
+
 source venv/bin/activate
 
 echo 'instal requirements'
 sudo pip3 install -r requirements.txt
 
 echo 'run app'
-sudo python3 app.py  >> log.txt
+sudo nohup python3 app.py > app.log 2>&1 &
