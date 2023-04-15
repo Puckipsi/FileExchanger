@@ -23,10 +23,11 @@ class FileManager:
             for chunk in response.iter_content(chunk_size=8192):
                 f.write(chunk)
 
-    def upload_file(self, host: str, endpoint:str, file_name: str, response: bytes):
-        files = {'file': (file_name, response.content)}
-        target_url = host + endpoint
-        res = requests.post(target_url, files=files)
+    def upload_file(self, host: str, endpoint:str, filename: str, response: bytes):
+        files = {'file': (filename, response.raw)}
+        res = requests.post(host + endpoint, files=files, stream=True)
+        res.raise_for_status()
+        #Response(res.content, headers={'Content-Disposition': f'attachment; filename={file_name}'}, mimetype=res.headers['content-type'])
         return json.loads(res.text)
     
 

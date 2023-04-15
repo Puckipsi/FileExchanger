@@ -1,8 +1,7 @@
 import os
-from datetime import datetime
 import requests
 from flask import request, render_template, send_from_directory, jsonify, redirect
-from utils.timeit import timeit
+from utils.timeit import timeit, current_data_time
 from utils.json import read_json_file
 from application.services.CrosReplica.Replica import send_files_to_servers
 
@@ -39,7 +38,7 @@ class FileService:
         file = request.files['file']
         filename = file.filename
         file.save("/".join((folder, filename)))
-        data_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        data_time = current_data_time
         return data_time
     
     
@@ -58,18 +57,19 @@ class FileService:
 
     def get_uploading_attributes(self, url: str, host: str):
         filename = url.split('/')[-1]
-        response = requests.get(url, stream=True)
-
         download_link = f"{host}download/{filename}"
 
         if host == request.host_url:
             upload_folder = self.config.get_upload_folder()
-            duration = self.file_manager.write_file(upload_folder, filename, response)
-            data_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            with requests.get(url, stream=True) as response:
+                response.raise_for_status()
+                duration = self.file_manager.write_file(upload_folder, filename, response)
             _, duration = duration
-            upload_response = {"data_time":data_time, "duration": duration, "instance_data": self.instance.get_instance_data()}
+            upload_response = {"data_time": current_data_time, "duration": duration, "instance_data": self.instance.get_instance_data()}
         else:
             upload_endpoint = self.config.get_upload_file_endpoint()
+            response = requests.get(url, stream=True)
+            response.raise_for_status()
             upload_response = self.file_manager.upload_file(host, upload_endpoint, filename, response)
 
         upload_response['duration'] = str(upload_response['duration'])[:6]
