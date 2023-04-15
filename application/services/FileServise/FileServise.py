@@ -38,7 +38,7 @@ class FileService:
         file = request.files['file']
         filename = file.filename
         file.save("/".join((folder, filename)))
-        data_time = current_data_time
+        data_time = current_data_time()
         return data_time
     
     
@@ -65,7 +65,7 @@ class FileService:
                 response.raise_for_status()
                 duration = self.file_manager.write_file(upload_folder, filename, response)
             _, duration = duration
-            upload_response = {"data_time": current_data_time, "duration": duration, "instance_data": self.instance.get_instance_data()}
+            upload_response = {"data_time": current_data_time(), "duration": duration, "instance_data": self.instance.get_instance_data()}
         else:
             upload_endpoint = self.config.get_upload_file_endpoint()
             response = requests.get(url, stream=True)
@@ -106,10 +106,12 @@ class FileService:
         return render_template('download.html', instance_data=instance_data, filename=file)
     
     def remove(self, file):
-        file_path = self.file_manager.get_file_path(self.config.get_upload_folder(), file)
-        print(file_path)
+        uploads_file_path = self.file_manager.get_file_path(self.config.get_upload_folder(), file)
+        replica_file_path = self.file_manager.get_file_path(self.config.get_replica_folder(), file+'.json')
+
         try:
-            os.remove(file_path)
+            os.remove(uploads_file_path)
+            os.remove(replica_file_path)
         except Exception as e:
             print("An error occurred while removing file", e)
         finally:
