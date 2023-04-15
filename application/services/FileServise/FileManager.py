@@ -12,8 +12,8 @@ class FileManager:
         if not os.path.exists(folder_name):
             os.makedirs(folder_name)
 
-    def assert_file_existing(self, folder_name: str, file: str):
-        if os.path.isfile(f'{folder_name}/{file}.json'):
+    def assert_file_existing(self, folder_name: str, file: str, extension: str=''):
+        if os.path.isfile(f'{folder_name}/{file}{extension}'):
             return True
         
 

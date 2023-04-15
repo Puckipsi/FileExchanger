@@ -118,7 +118,7 @@ class FileService:
     def replica_info(self, file):
         replica_folder = self.config.get_replica_folder()
 
-        if not self.file_manager.assert_file_existing(replica_folder, file):
+        if not self.file_manager.assert_file_existing(replica_folder, file, extension='.json'):
             return render_template('replica404.html', filename=file)
         
         replicas = read_json_file(replica_folder, file)
