@@ -2,6 +2,7 @@ import os
 from flask import request, render_template, send_from_directory, jsonify, redirect
 from utils.timeit import timeit, current_data_time
 from utils.json import read_json_file
+from utils.url import is_valid_url
 from application.services.CrosReplica.Replica import send_files_to_servers
 
 
@@ -43,6 +44,11 @@ class FileService:
     
     def upload_info(self):
         url = request.form.get('url')
+        url_validator = is_valid_url(url)
+        if not url_validator.get('valid'):
+            message = url_validator.get('message')
+            return render_template('invalid_url.html', message=message)
+
         nearest_host = self.geo_locator.find_nearest_host(url)
         is_origin_host = nearest_host == request.host_url
         

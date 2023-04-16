@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>File Exchanger | Invalid Url Error</title>
+    <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/invalid_url.css') }}">
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='icons/icon-not-found.png') }}">
+  </head>
+  <body>
+    <div class="container">
+      <h1>Invalid Url Error</h1>
+      <div class="url">
+        <h2>Something went wrong. Cause: {{message}}</h2>
+        <h2>Please check that you have entered a valid URL and try again.</h2>
+        <h2>Make sure that the URL starts with a scheme (e.g., http:// or https://) and does not contain any typos or special characters.</h2>
+        </div>
+      <a href="{{ url_for('upload') }}" class="back-link">Back to Upload</a>
+    </div>
+  </body>
+</html>

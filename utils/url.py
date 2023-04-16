@@ -1,8 +1,23 @@
 import socket
 from ipaddress import ip_address
+from typing import Union
+import requests
 
 
 
+def is_valid_url(url: str) -> dict[str, Union[bool, str]]:
+    try:
+        response = requests.head(url)
+        response.raise_for_status()
+        return {'valid': True, "message": "URL is valid and exists"}
+    except (requests.exceptions.MissingSchema, requests.exceptions.InvalidURL):
+        return {'valid': False, "message": "URL Invalid"}
+    except requests.exceptions.HTTPError:
+        return {'valid': False, "message": "URL exists but returned an error status code"}
+    except requests.exceptions.ConnectionError:
+        return {'valid': False, "message": "Could not connect to the URL"}
+
+    
 def is_valid_ip_address(ip: str) -> bool:
     try:
         ip_address(ip)
