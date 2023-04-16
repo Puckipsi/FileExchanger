@@ -49,9 +49,8 @@ class FileService:
         if is_origin_host:
             upload_response, duration  = self.get_uploading_attributes(url, nearest_host)
             upload_response['duration'] = str(duration)[:6]    
-            task = send_files_to_servers.delay(is_origin_host, nearest_host, upload_response['filename'])
-            print("task id:", task.id)
-
+            task = send_files_to_servers.delay(nearest_host, upload_response['filename'])
+            print("task id: ",task.id)
             return render_template("upload_info.html", response=upload_response)
         
         upload_info_response = self.config.get_upload_info_endpoint()
