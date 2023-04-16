@@ -3,6 +3,12 @@ import time
 import json
 from __init__ import app
 import requests
+from datetime import datetime
+from utils.config import Config
+import pytz
+
+
+config = Config()
 
 
 class FileManager:
@@ -41,12 +47,20 @@ class FileManager:
         
 
     def load_uploads(self, upload_folder: str):
+        time_zone = pytz.timezone(config.get_time_zone())
         dir_path = os.path.join(app.root_path, upload_folder)
         dir_files = os.listdir(dir_path)
-        files = [{
-		    'file': file,
-            "size": os.path.getsize(f"{dir_path}/{file}"),
-	        'upload_date': time.ctime(os.path.getctime(f"{dir_path}/{file}"))} for file in sorted(dir_files)]  
+        files = []
+
+        for file in sorted(dir_files):
+            file_path = f"{dir_path}/{file}"
+            last_modified_time = datetime.utcfromtimestamp(os.path.getmtime(file_path))
+            last_modified_time = time_zone.localize(last_modified_time).astimezone(time_zone)
+            files.append({
+                'file': file,
+                "size": os.path.getsize(file_path),
+                'upload_date': last_modified_time.strftime('%Y-%m-%d %H:%M:%S %Z%z')
+            })
         
         return files
     
