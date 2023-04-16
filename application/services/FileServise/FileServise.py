@@ -83,10 +83,11 @@ class FileService:
 
 
     def uploads(self):
+        time_zone = self.config.get_time_zone()
         upload_folder = self.config.get_upload_folder()
         self.file_manager.assert_existing_folder(upload_folder)
         files = self.file_manager.load_uploads(upload_folder)
-        return render_template("uploads.html",files=files)
+        return render_template("uploads.html",files=files, time_zone=time_zone)
     
     def download(self, file: str):
         return send_from_directory(self.config.get_upload_folder(), file, as_attachment=True) 

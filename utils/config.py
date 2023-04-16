@@ -24,3 +24,6 @@ class Config:
 
     def get_available_hosts(self):
         return config['AVAILABLE_HOSTS'].split(',')
+    
+    def get_time_zone(self):
+        return config['TIME_ZONE']
