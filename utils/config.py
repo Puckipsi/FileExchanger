@@ -16,6 +16,9 @@ class Config:
     def get_upload_file_endpoint(self):
         return config['UPLOAD_FILE_ENDPOINT']
     
+    def get_upload_info_endpoint(self):
+        return config['UPLOAD_INFO_ENDPOINT']
+    
     def get_replicate_file_endpoint(self):
         return config['REPLICATE_FILE_ENDPOINT']
 

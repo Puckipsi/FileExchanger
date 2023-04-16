@@ -3,7 +3,6 @@ import time
 import json
 from __init__ import app
 import requests
-from utils.timeit import timeit
 
 
 class FileManager:
@@ -17,19 +16,21 @@ class FileManager:
             return True
         
 
-    @timeit
-    def write_file(self, folder_name: str, file_name: str, response: object):
-        with open(f'{folder_name}/{file_name}', 'wb') as f:
-            for chunk in response.iter_content(chunk_size=8192):
-                f.write(chunk)
+    def write_file(self, url: str, folder_name: str, file_name: str):
+        with requests.get(url, stream=True) as response:
+            response.raise_for_status()
+            with open(f'{folder_name}/{file_name}', 'wb') as f:
+                for chunk in response.iter_content(chunk_size=8192):
+                    f.write(chunk)
 
-    def upload_file(self, host: str, endpoint:str, filename: str, response: bytes):
-        files = {'file': (filename, response.raw)}
-        res = requests.post(host + endpoint, files=files, stream=True)
-        res.raise_for_status()
-        #Response(res.content, headers={'Content-Disposition': f'attachment; filename={file_name}'}, mimetype=res.headers['content-type'])
-        return json.loads(res.text)
     
+    def redirecting_upload_to_nearest_host(self, host: str, upload_info_endpoint: str, download_url: str):
+        data = {'url': download_url}
+        with requests.post(host + upload_info_endpoint, data=data) as response:
+            response.raise_for_status()
+
+        return response.text
+
 
     def upload_file_from_local(self, host: str, upload_endpoint:str, upload_folder: str, filename: str):
         with open(f'{upload_folder}/{filename}', 'rb') as file:
