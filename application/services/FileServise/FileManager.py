@@ -41,7 +41,7 @@ class FileManager:
     def upload_file_from_local(self, host: str, upload_endpoint:str, upload_folder: str, filename: str):
         with open(f'{upload_folder}/{filename}', 'rb') as file:
             while True:
-                chunk = file.read(1024*1024) #1mb
+                chunk = file.read(100000000) #100mb
                 if not chunk:
                     break
                 files = {'file': (filename, chunk)}
@@ -60,7 +60,8 @@ class FileManager:
         for file in sorted(dir_files):
             file_path = f"{dir_path}/{file}"
             last_modified_time = datetime.utcfromtimestamp(os.path.getmtime(file_path))
-            last_modified_time = time_zone.localize(last_modified_time).astimezone(time_zone)
+            last_modified_time = last_modified_time.replace(tzinfo=pytz.UTC).astimezone(time_zone)
+        
             files.append({
                 'file': file,
                 "size": os.path.getsize(file_path),
