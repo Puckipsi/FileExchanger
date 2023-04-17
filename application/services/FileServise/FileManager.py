@@ -40,8 +40,13 @@ class FileManager:
 
     def upload_file_from_local(self, host: str, upload_endpoint:str, upload_folder: str, filename: str):
         with open(f'{upload_folder}/{filename}', 'rb') as file:
-            files = {'file': (filename, file)}
-            response = requests.post(host + upload_endpoint, files=files)
+            while True:
+                chunk = file.read(1024*1024) #1mb
+                if not chunk:
+                    break
+                files = {'file': (filename, chunk)}
+                response = requests.post(host + upload_endpoint, files=files, timeout=5)
+                response.raise_for_status()
 
         return response
         
