@@ -41,4 +41,9 @@ app.add_url_rule(
     rule="/replica-info/<file>", methods=["GET"], view_func=file_service.replica_info)
 
 
+app.add_url_rule(
+    rule="/logs", methods=["GET"], view_func=file_service.logs)
+
+
+
 

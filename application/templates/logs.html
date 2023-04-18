@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>File Exchanger | Server Logs</title>
+  </head>
+  <body>
+    <h1>Flask Server Logs</h1>
+    <ul>
+      {% for log in logs %}
+        <li>{{ log }}</li>
+      {% endfor %}
+    </ul>
+  </body>
+</html>

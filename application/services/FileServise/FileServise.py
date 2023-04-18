@@ -44,6 +44,7 @@ class FileService:
     
     def upload_info(self):
         url = request.form.get('url')
+        print("download url: ", url )
         url_validator = is_valid_url(url)
         if not url_validator.get('valid'):
             message = url_validator.get('message')
@@ -131,6 +132,11 @@ class FileService:
         replicas = replicas.get(file)
 
         return render_template('replica.html',replicas=replicas, filename=file)
+    
+    
+    def logs(self):
+        logs = self.file_manager.read_file('app.log')
+        return render_template('logs.html', logs=logs)
         
             
 

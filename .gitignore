@@ -2,4 +2,5 @@
 /uploads
 /replicated
 .DS_Store
-log.txt
+celery.log
+app.log

@@ -9,6 +9,10 @@ body {
 	top: 0;
 	left: 5px;
 	right: 5px;
+	display: flex;
+    justify-content: space-between;
+    align-items: center;
+  	padding: 10px;
 	position: absolute;
 	padding: 20px;
 	background-color: #fff;
@@ -70,8 +74,8 @@ body {
   }
 
   .main-link {
-	display: inline-block;
-	margin-left: 40px;
+	margin-left: 25px;
+	padding: 10px;
 	font-size: 30px;
 	color: #4CAF50;
 	text-decoration: solid;
@@ -82,9 +86,10 @@ body {
 	color: #3e8e41;
   }
 
+
   .uploads-link {
-	display: inline-block;
-	margin-left: 70%;
+	margin-left: auto;
+	padding: 10px;
 	font-size: 25px;
 	color: #4CAF50;
 	text-decoration: solid;
@@ -92,6 +97,24 @@ body {
   }
   
   .uploads-link:hover {
+	color: #3e8e41;
+  }
+
+  .logs-link {
+	margin-right: 25px;
+	margin-left: 25px;
+	padding: 10px;
+	font-size: 25px;
+	color: #4CAF50;
+	text-decoration: solid;
+	transition: color 0.3s ease;
+  }
+  
+  .logs-link:hover {
+	color: #3e8e41;
+  }
+
+  .flask-log-link:hover {
 	color: #3e8e41;
   }
   

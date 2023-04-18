@@ -74,3 +74,8 @@ class FileManager:
         file_path = os.path.join(app.root_path, folder_name, file)
         return file_path
 
+
+    def read_file(self,filename_path: str):
+        with open(filename_path, 'r') as file:
+            for line in file:
+                yield line.strip()
