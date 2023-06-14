@@ -1,5 +1,4 @@
 from flask import Flask
-from celery import Celery
 from utils.celery import get_celery_app_instance
 
 
